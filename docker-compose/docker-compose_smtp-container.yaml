@@ -1,0 +1,48 @@
+version: '3.6'
+services:
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    container_name: gitlab
+#    restart: always
+    hostname: 'gitlab.exp.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url = 'http://gitlab.exp.com'
+        nginx['enable'] = true
+        nginx['listen_https'] = false
+        gitlab_rails['smtp_enable'] = true
+        gitlab_rails['smtp_address'] = 'smtp'
+        gitlab_rails['smtp_port'] = 25
+        gitlab_rails['smtp_domain'] = 'exp.com'
+        gitlab_rails['smtp_tls'] = false
+        gitlab_rails['smtp_openssl_verify_mode'] = 'none'
+        gitlab_rails['smtp_enable_starttls_auto'] = false
+        gitlab_rails['smtp_ssl'] = false
+        gitlab_rails['smtp_force_ssl'] = false
+        gitlab_rails['gitlab_email_from'] = 'gitlab@exp.com'
+        gitlab_rails['gitlab_email_reply_to'] = 'noreply@exp.com'
+        postgresql['enable'] = false
+        gitlab_rails['db_username'] = "${db-id}"
+        gitlab_rails['db_password'] = "${db-passwd}"
+        gitlab_rails['db_host'] = "${ip addrs}"
+        gitlab_rails['db_port'] = "5432"
+        gitlab_rails['db_database'] = "gitlabhq_production"
+        gitlab_rails['db_adapter'] = 'postgresql'
+        gitlab_rails['db_encoding'] = 'utf8'
+    ports:
+      - "80:80"
+      - "1922:22"
+      - "443:443"
+
+    volumes:
+    - "./data:/var/opt/gitlab"
+    - "./config:/etc/gitlab"
+    - "./log:/var/log/gitlab"
+    links:
+      - "smtp:smtp"
+
+  smtp:
+    image: namshi/smtp
+    container_name: smtp
+    environment:
+      RELAY_NETWORKS: :192.168.0.0/24:10.0.0.0/8
