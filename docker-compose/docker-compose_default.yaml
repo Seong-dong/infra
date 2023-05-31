@@ -1,0 +1,27 @@
+version: '3.6'
+services:
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    container_name: gitlab
+#    restart: always
+    hostname: 'gitlab.exp.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url = 'http://gitlab.exp.com'
+        postgresql['enable'] = false
+        gitlab_rails['db_username'] = "${database username}"
+        gitlab_rails['db_password'] = "${database user passwd}"
+        gitlab_rails['db_host'] = "${ip addrs}"
+        gitlab_rails['db_port'] = "${port}"
+        gitlab_rails['db_database'] = "${database name}"
+        gitlab_rails['db_adapter'] = 'postgresql'
+        gitlab_rails['db_encoding'] = 'utf8'
+    ports:
+      - "80:80"
+      - "1922:22"
+      - "443:443"
+
+    volumes:
+    - "./data:/var/opt/gitlab"
+    - "./config:/etc/gitlab"
+    - "./log:/var/log/gitlab"
