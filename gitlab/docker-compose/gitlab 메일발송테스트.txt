@@ -1,0 +1,4 @@
+# 메일검증
+gitlab-rails console
+irb(main):025:0> 
+Notify.test_email('sdjo@injeinc.co.kr', 'Message Subject', 'Message Body').deliver_now
