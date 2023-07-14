@@ -4,10 +4,10 @@ services:
     image: 'gitlab/gitlab-ce:latest'
     container_name: gitlab
 #    restart: always
-    hostname: 'gitlab.exp.com'
+    hostname: 'gitlab.cnpinfra.com'
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url = 'http://gitlab.exp.com'
+        external_url = 'http://gitlab.cnpinfra.com'
         postgresql['enable'] = false
         gitlab_rails['db_username'] = "gitlab"
         gitlab_rails['db_password'] = "ijinc123!"
@@ -25,3 +25,4 @@ services:
     - "./data:/var/opt/gitlab"
     - "./config:/etc/gitlab"
     - "./log:/var/log/gitlab"
+~                                
